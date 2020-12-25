@@ -4,8 +4,7 @@ import geometry from 'canvas-sketch-util/geometry';
 import random from 'canvas-sketch-util/random';
 import {intersetCircleCircle} from './indersect-circle-circle.js'
 	
-let colors = ["#8AACA6","#861F16","#FED340","#ED6A66"]
-	
+export let colors = ["#8AACA6","#861F16","#FED340","#ED6A66"]	
 export let cx=0
 export let cy=0
 export let r=20
@@ -91,7 +90,7 @@ for (let i = 0; i< lines; i++){
 </script>
 <g>
 
-<path d="{hangerPath}" stroke="#fff"  stroke-dasharray="0.01 10" stroke-linecap="round" stroke-width="4"/>
+<path d="{hangerPath}" stroke="{fills[0]}"  stroke-dasharray="0.01 10" stroke-linecap="round" stroke-width="4"/>
 <path d="{connectorPath}" fill="{fills[0]}"/>
 
 

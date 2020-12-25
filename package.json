@@ -19,6 +19,8 @@
     "canvas-sketch-util": "latest"
   },
   "dependencies": {
+    "chromotome": "^1.19.1",
+    "fast-2d-poisson-disk-sampling": "^1.0.1",
     "poisson-disk-sampling": "^2.2.2",
     "sirv-cli": "^1.0.0"
   }
