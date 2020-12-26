@@ -4,10 +4,12 @@
 	import * as tome from 'chromotome';
 	import random from 'canvas-sketch-util/random';
 	import {saveSvgAsPng} from  'save-svg-as-png'
+	import { saveAs } from 'file-saver';
+
 
 	let width=360; 
-	let height = 640;	
-	
+	let height = 640;
+	let svg;
 	
 	let palette = {
 		background: "#F0EEE6",
@@ -15,68 +17,102 @@
 		name: "ornaments bright",
 		size: 6,
 		stroke: "#fff"
-	}	
+		
+	}
+
 
 	palette = tome.get(); // tome.getRandom() also works.
+	let points = [[250,400,50],[140,200,80]]
 
+	$: title = `Christmas-Ornaments 2020 by Michael Gehrmann – ${points.length} Ornaments Color Scheme ${palette.name}`
 
-	let points = []
-/*
-	for (let i = 1; i <= 3; i++){
-		points.push([Math.random()* width, Math.random()* height, Math.random()* width/4 + width/12])
-	}
-*/
 
 let updatePoints = ()=>{
-	 points = []
-var p = new FastPoissonDiskSampling({
-    shape: [width*0.75, height*0.75],
-    radius: width*0.65,
-    tries: 20
-});
-var pts = p.fill();
+	points = points.slice(points.length);
 
-pts.map(point=>{
-	points.push([point[0]+width*0.125, point[1]+height*0.125,random.range(width/6,width/4 )])
-}) 
+	var p = new FastPoissonDiskSampling({
+    	shape: [width*0.75, height*0.75],
+    	radius: width*0.65,
+    	tries: 20
+	});
+
+	var pts = p.fill();
+	pts.map(point=>{
+		let x = parseInt( point[0]+width*0.125 )
+		let y = parseInt( point[1]+height*0.125 )
+		let r = parseInt(random.range(width/6,width/4 ))
+		points.push([x, y,r])
+	})
+
+
 
 }
-updatePoints()
 
-
-let svg;
+let updatePalette = () => {
+	palette = tome.get()
+}
 
 let saveDesginAsPng = () =>{
-	console.log(svg)
 	saveSvgAsPng(svg, `ornament-${palette.name}.png`, {scale: 3});
+}
+
+let saveDesginAsSvg = () =>{
+	var blob = new Blob([svg.outerHTML], {type: "image/svg+xml;charset=utf-8"});
+	saveAs(blob, `ornament-${palette.name}.svg`);
 
 }
+
 
 </script>
 
-<svg viewBox="0 0 {width} {height}" bind:this={svg} on:click={saveDesginAsPng}>
-<title>Christmas-Ornaments 2020 by Michael Gehrmann – {palette.name}</title>
-	<rect fill="{palette.background}" {width} {height}  />
-	{#each points as [cx,cy,r], i}
-		<Globe {cx} {cy} {r} seed="{Math.random()}" colors={palette.colors} />
-	{/each}
-	<!--
-	<Globe cx=220 cy=200 r=90 seed="16"/>
-	<Globe cx=190 cy=440 r=40 seed="17"/>
-	<Globe cx=120 cy=340 r=60 seed="9"/>
-	-->
-</svg>
+<section class="preview">
+	<svg viewBox="0 0 {width} {height}" bind:this={svg}  xmlns="http://www.w3.org/2000/svg">
+		<title>{title}</title>
+		<rect id="background" fill="{palette.background}" {width} {height}  />
+		{#each points as [cx,cy,r] (`${cx}-${cy}-${r}-${palette.name}`)}
+			<Globe {cx} {cy} {r} seed="{Math.random()}" colors={palette.colors}/>
+		{/each}
+	</svg>
+</section>
+<section class="actions">
+<button class="layout" title="Update drawing" on:click={updatePoints} > Update Drawing </button>
+<button class="color"  title="update colors" on:click={updatePalette} > Update Colors </button>
+<button class="png" title="download as png" on:click={saveDesginAsPng} > Download PNG </button>
+<button class="svg "title="download as svg" on:click={saveDesginAsSvg} > Download SVG </button>
 
-
+</section>
 <style>
 :global(body) {
 	display: grid;
+	grid-template: "body";
+	grid-template-rows: 1fr auto;
 	margin: 0;
 	padding: 0px;
-	place-items: center;
+	height: 100vh;
 	background: #000
-
 }
-svg{max-width: 100vmin;
-	max-height: 100vmin;}
+
+.preview{
+	grid-area: body;
+}
+.actions{
+	grid-area: body;
+
+	display: grid;	
+	grid-template: "layout . color" ". . ." "png . svg";
+	grid-template-rows: auto 1fr auto;
+	grid-template-columns: auto 1fr auto;
+	padding: 1rem;
+	grid-gap: 1rem;
+}
+
+.layout{ grid-area: layout }
+.color{ grid-area: color }
+.png{grid-area: png}
+.svg{grid-area: svg}
+
+svg{
+
+width: 100%; height: 100%; max-height: 100vh;
+	}
 </style>
