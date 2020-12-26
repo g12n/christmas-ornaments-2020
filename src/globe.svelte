@@ -3,17 +3,21 @@ import vec2 from "gl-vec2"
 import geometry from 'canvas-sketch-util/geometry';
 import random from 'canvas-sketch-util/random';
 import {intersetCircleCircle} from './indersect-circle-circle.js'
-	
+
+
+export let seed=10
+random.setSeed(seed)
+
 export let colors = ["#8AACA6","#861F16","#FED340","#ED6A66"]	
 export let cx=0
 export let cy=0
 export let r=20
-export let lines = 10;
+export let lines = random.rangeFloor(2,12) ;
 export let thickness = (r*2.5)/(lines);
-export let seed=10
+
 
 let center = [parseInt(cx),parseInt(cy)];
-random.setSeed(seed)
+
 
 //
 let hangerPath  = `M${cx},0V${cy- r -8}`
