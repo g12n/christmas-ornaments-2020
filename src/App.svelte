@@ -9,6 +9,11 @@
 
 	let width=360; 
 	let height = 640;
+
+	let vmin = Math.min(width,height);
+	
+	let maxr = vmin*0.55;
+	let padding =  vmin* 0.33;
 	let svg;
 	
 	let palette = {
@@ -30,23 +35,24 @@
 let updatePoints = ()=>{
 	points = points.slice(points.length);
 
+	
+
 	var p = new FastPoissonDiskSampling({
-    	shape: [width*0.75, height*0.75],
-    	radius: width*0.65,
-    	tries: 20
+
+    	shape: [width-padding*2, height-padding*2],
+    	radius: maxr,
+    	tries: 100
 	});
 
 	var pts = p.fill();
 	pts.map(point=>{
-		let x = parseInt( point[0]+width*0.125 )
-		let y = parseInt( point[1]+height*0.125 )
-		let r = parseInt(random.range(width/6,width/4 ))
+		let x = parseInt( point[0]+padding)
+		let y = parseInt( point[1]+padding )
+		let r = parseInt(random.rangeFloor(maxr/4,maxr/2 ))
 		points.push([x, y,r])
 	})
-
-
-
 }
+updatePoints()
 
 let updatePalette = () => {
 	palette = tome.get()
@@ -59,10 +65,7 @@ let saveDesginAsPng = () =>{
 let saveDesginAsSvg = () =>{
 	var blob = new Blob([svg.outerHTML], {type: "image/svg+xml;charset=utf-8"});
 	saveAs(blob, `ornament-${palette.name}.svg`);
-
 }
-
-
 </script>
 
 <section class="preview">
