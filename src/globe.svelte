@@ -12,8 +12,8 @@ export let colors = ["#8AACA6","#861F16","#FED340","#ED6A66"]
 export let cx=0
 export let cy=0
 export let r=20
-export let lines = random.rangeFloor(2,12) ;
-export let thickness = (r*2.5)/(lines);
+export let lines = random.rangeFloor(3,9) ;
+export let thickness = (r*2.5)/lines;
 
 
 let center = [parseInt(cx),parseInt(cy)];
@@ -41,31 +41,60 @@ let connectorPath =`M${pi1}`
 
 	
 let paths = []
+let debugLines = [];
 
 let fills = [];
-	
-for (let i = 0; i< lines; i++){
-	let a = [-r*2,0];
-	let b = [r*2,0];
-	
-	let offset = vec2.lerp([],[0,-r],[0,r] , i/(lines-1));
-	vec2.add(offset, offset, center)	
-	vec2.add(offset,offset,[0,-thickness/2])
 
-	let angle = random.range(Math.PI/-lines, Math.PI/lines);
- 	
-	vec2.rotate(a,a,angle)
-	vec2.rotate(b,b,angle)
-	vec2.add(a,a,offset)
-	vec2.add(b,b,offset)
+for (let i = 0; i< lines; i++){
+
+	let angle = random.range(Math.PI/(-lines*1.5), Math.PI/(lines*1.5));
+		
+	let offset = vec2.lerp([],[0,-r],[0,r] , i/(lines-1));
+	
+	vec2.add(offset,offset,[0,random.range(-thickness/2, thickness/2)])
+	
+
+	let lineCenter = vec2.add([], center,offset )
+
+
+	let barThickness = random.range(thickness/1.4, thickness/3);
+
+	let normal = vec2.rotate([],[0,barThickness], angle)
+
+	
+	let p1 = vec2.rotate([],[r,10], angle)
+	let p2 = vec2.negate([],p1)
+
+	vec2.add(p1, p1, lineCenter)
+	vec2.add(p2, p2, lineCenter)
+
+	//debugLines.push([p1,p2]);
+
+
+
+
+	let a = vec2.add([],p1,normal);
+	let b = vec2.add([],p2,normal);
+	debugLines.push([a,b]);
+
+	let c = vec2.subtract([],p1,normal);
+	let d = vec2.subtract([],p2,normal);
+
+
+	debugLines.push([c,d]);
+	
+
 	let line = []
 	geometry.clipLineToCircle(a, b, center, r, line)
-	vec2.add(a,a,[0,thickness])
-	vec2.add(b,b,[0,thickness])	
+
+	
 	let line2 = []
-	let collide = geometry.clipLineToCircle(a, b, center, r, line2)
+	let collide = geometry.clipLineToCircle(c, d, center, r, line2)
 	let path = ""
 	
+
+
+
 	if(line.length >1){
 		let[p1,p2] = line;
 		path += `M ${p1}L${p2}`
@@ -101,6 +130,8 @@ for (let i = 0; i< lines; i++){
 {#each paths as d, i}
 	<path {d} fill="{fills[i]}" opacity=0.8></path>
 {/each}
+
+
 </g>
 
 <style>
