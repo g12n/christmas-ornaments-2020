@@ -1,5 +1,6 @@
 <script>
 	import Globe from './globe.svelte';
+	import Dotglobe from './dotglobe.svelte';
 	import FastPoissonDiskSampling from "fast-2d-poisson-disk-sampling"
 	import * as tome from 'chromotome';
 	import random from 'canvas-sketch-util/random';
@@ -11,7 +12,7 @@
 	let height = 640;
 
 	let vmin = Math.min(width,height);
-	
+
 	let maxr = vmin*0.55;
 	let padding =  vmin* 0.33;
 	let svg;
@@ -35,10 +36,7 @@
 let updatePoints = ()=>{
 	points = points.slice(points.length);
 
-	
-
 	var p = new FastPoissonDiskSampling({
-
     	shape: [width-padding*2, height-padding*2],
     	radius: maxr,
     	tries: 100
@@ -52,6 +50,7 @@ let updatePoints = ()=>{
 		points.push([x, y,r])
 	})
 }
+
 updatePoints()
 
 let updatePalette = () => {
@@ -73,10 +72,11 @@ let saveDesginAsSvg = () =>{
 		<title>{title}</title>
 		<rect id="background" fill="{palette.background}" {width} {height}  />
 		{#each points as [cx,cy,r] (`${cx}-${cy}-${r}-${palette.name}`)}
-			<Globe {cx} {cy} {r} seed="{Math.random()}" colors={palette.colors}/>
+			<Dotglobe {cx} {cy} {r} seed="{Math.random()}" colors={palette.colors}/>
 		{/each}
 	</svg>
 </section>
+
 <section class="actions">
 <button class="layout" title="Update drawing" on:click={updatePoints} > Update Drawing </button>
 <button class="color"  title="update colors" on:click={updatePalette} > Update Colors </button>
