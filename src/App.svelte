@@ -2,10 +2,12 @@
 	import Globe from './globe.svelte';
 	import Dotglobe from './dotglobe.svelte';
 	import Sparkler from './sparkler.svelte';
+	import sphereA from './sphere-a.svelte';
+	import sphereB from './sphere-b.svelte';
 
 
 
-	let ornaments = [  Dotglobe, Sparkler]
+	let ornaments = [ Globe, Dotglobe, Sparkler,sphereA,  sphereB ]
 
 	import FastPoissonDiskSampling from "fast-2d-poisson-disk-sampling"
 	import * as tome from 'chromotome';
