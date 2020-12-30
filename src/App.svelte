@@ -5,7 +5,7 @@
 
 
 
-	let ornaments = [ Dotglobe, Sparkler]
+	let ornaments = [  Dotglobe, Sparkler]
 
 	import FastPoissonDiskSampling from "fast-2d-poisson-disk-sampling"
 	import * as tome from 'chromotome';
@@ -51,7 +51,7 @@ let updatePoints = ()=>{
 	pts.map(point=>{
 		let x = parseInt( point[0]+padding)
 		let y = parseInt( point[1]+padding )
-		let r = parseInt(random.rangeFloor(maxr/3,maxr/1.5 ))
+		let r = parseInt(random.rangeFloor(maxr/3,maxr/2 ))
 		points.push([x, y,r])
 	})
 }
@@ -63,7 +63,7 @@ let updatePalette = () => {
 }
 
 let saveDesginAsPng = () =>{
-	saveSvgAsPng(svg, `ornament-${palette.name}.png`, {scale: 6});
+	saveSvgAsPng(svg, `ornament-${palette.name}.png`, {scale: 3});
 }
 
 let saveDesginAsSvg = () =>{
