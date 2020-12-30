@@ -1,6 +1,12 @@
 <script>
 	import Globe from './globe.svelte';
 	import Dotglobe from './dotglobe.svelte';
+	import Sparkler from './sparkler.svelte';
+
+
+
+	let ornaments = [ Dotglobe, Sparkler]
+
 	import FastPoissonDiskSampling from "fast-2d-poisson-disk-sampling"
 	import * as tome from 'chromotome';
 	import random from 'canvas-sketch-util/random';
@@ -38,14 +44,14 @@ let updatePoints = ()=>{
 	var p = new FastPoissonDiskSampling({
     	shape: [width-padding*2, height-padding*2],
     	radius: maxr,
-    	tries: 100
+    	tries: 10
 	});
 
 	var pts = p.fill();
 	pts.map(point=>{
 		let x = parseInt( point[0]+padding)
 		let y = parseInt( point[1]+padding )
-		let r = parseInt(random.rangeFloor(maxr/4,maxr/2 ))
+		let r = parseInt(random.rangeFloor(maxr/3,maxr/1.5 ))
 		points.push([x, y,r])
 	})
 }
@@ -71,7 +77,7 @@ let saveDesginAsSvg = () =>{
 		<title>{title}</title>
 		<rect id="background" fill="{palette.background}" {width} {height}  />
 		{#each points as [cx,cy,r] (`${cx}-${cy}-${r}-${palette.name}`)}
-			<Dotglobe {cx} {cy} {r} seed="{Math.random()}" colors={palette.colors}/>
+			<svelte:component this={random.pick(ornaments)} {cx} {cy} {r} seed="{Math.random()}" colors={palette.colors}/>
 		{/each}
 	</svg>
 </section>
