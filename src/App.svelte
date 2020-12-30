@@ -23,7 +23,6 @@
 		name: "ornaments bright",
 		size: 6,
 		stroke: "#fff"
-		
 	}
 
 
@@ -58,7 +57,7 @@ let updatePalette = () => {
 }
 
 let saveDesginAsPng = () =>{
-	saveSvgAsPng(svg, `ornament-${palette.name}.png`, {scale: 3});
+	saveSvgAsPng(svg, `ornament-${palette.name}.png`, {scale: 6});
 }
 
 let saveDesginAsSvg = () =>{
